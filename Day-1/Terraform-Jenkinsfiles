@@ -34,7 +34,7 @@ pipeline {
 ### With terraform examples ###
 
 
-Ex:-1
+#Ex:-1
 
 pipeline {
     agent any
@@ -76,7 +76,7 @@ pipeline {
 
 
 
-Ex-2
+#Ex-2
 
 pipeline {
     agent any
@@ -101,7 +101,9 @@ pipeline {
 }
 
 
-Ex:-3
+
+
+#Ex:-3
 
 pipeline {
     agent any
@@ -129,7 +131,7 @@ pipeline {
 
 
 
-Ex;-4
+#Ex;-4
 
 pipeline {
     agent any
@@ -170,7 +172,9 @@ pipeline {
 
 
 
-Ex-5
+
+
+#Ex-5
 
 pipeline {
     agent any
@@ -217,6 +221,9 @@ pipeline {
 }
 
 
+
+
+# Examaple with lable pipeline
 pipeline {
     agent {
         label 'dev'  #here label should match
