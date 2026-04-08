@@ -1,3 +1,4 @@
+#runs-on: ubuntu-latest → Automatically runs on a GitHub-provided VM
 name: CI Pipeline
 
 on:
