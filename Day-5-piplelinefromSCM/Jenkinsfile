@@ -1,36 +1,96 @@
+
 pipeline {
     agent any
 
+    // ✅ Parameter added
+    parameters {
+        choice(
+            name: 'action',
+            choices: ['apply', 'destroy'],
+            description: 'Choose the Terraform action to perform'
+        )
+    }
+
     stages {
-        stage('git checkout') {
+
+        stage('Git Checkout') {
             steps {
-               git branch: 'main', url: 'https://github.com/Quantamofsolace/CICD-series.git'
+                git branch: 'main', url: 'https://github.com/Quantamofsolace/CICD-series.git'
             }
         }
-         stage('init') {
-            steps {
-                dir('Day-5-piplelinefromSCM') {
-                  sh  'terraform init'
-              
-                }
-            }
-        }
-        stage('plan') {
-            steps {
-               dir('Day-5-piplelinefromSCM') {
-                  sh  'terraform plan'
-              
-                }
-            }
-        }
-        stage('apply') {
+
+        stage('Init') {
             steps {
                 dir('Day-5-piplelinefromSCM') {
-                  sh  'terraform apply -auto-approve'
-              
+                    sh 'terraform init'
                 }
             }
         }
-      
+
+        // ✅ Plan only for apply
+        stage('Plan') {
+            when {
+                expression { params.action == 'apply' }
+            }
+            steps {
+                dir('Day-5-piplelinefromSCM') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+        // ✅ Apply or Destroy based on parameter
+        stage('Execute') {
+            steps {
+                dir('Day-5-piplelinefromSCM') {
+                    script {
+                        if (params.action == 'apply') {
+                            sh 'terraform apply -auto-approve'
+                        } else if (params.action == 'destroy') {
+                            sh 'terraform destroy -auto-approve'
+                        } else {
+                            error "Invalid action selected!"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+
+// pipeline {
+//     agent any
+
+//     stages {
+//         stage('git checkout') {
+//             steps {
+//                git branch: 'main', url: 'https://github.com/Quantamofsolace/CICD-series.git'
+//             }
+//         }
+//          stage('init') {
+//             steps {
+//                 dir('Day-5-piplelinefromSCM') {
+//                   sh  'terraform init'
+              
+//                 }
+//             }
+//         }
+//         stage('plan') {
+//             steps {
+//                dir('Day-5-piplelinefromSCM') {
+//                   sh  'terraform plan'
+              
+//                 }
+//             }
+//         }
+//         stage('apply') {
+//             steps {
+//                 dir('Day-5-piplelinefromSCM') {
+//                   sh  'terraform apply -auto-approve'
+              
+//                 }
+//             }
+//         }
+      
+//     }
+// }
