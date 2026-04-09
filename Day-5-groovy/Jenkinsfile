@@ -79,3 +79,66 @@ node {
         }
     }
 }
+
+#=======================================================================================================================================================
+#This script is generated using AI to test out the build with parameters option will be enabled with scripting with out manual intervention.
+#=======================================================================================================================================================
+
+    pipeline {
+    agent any
+
+    // ✅ Automatically enables "Build with Parameters"
+    parameters {
+        choice(
+            name: 'action',
+            choices: ['apply', 'destroy'],
+            description: 'Choose the Terraform action to perform'
+        )
+    }
+
+    stages {
+
+        stage('Preparation') {
+            steps {
+                git branch: 'main', url: 'https://github.com/CloudTechDevOps/Terraform-0730am.git'
+            }
+        }
+
+        stage('Init') {
+            steps {
+                dir('Day-1-Terraform-basic-config') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        // ✅ Plan only when action = apply
+        stage('Plan') {
+            when {
+                expression { params.action == 'apply' }
+            }
+            steps {
+                dir('Day-1-Terraform-basic-config') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+        // ✅ Safe execution block
+        stage('Execute') {
+            steps {
+                dir('Day-1-Terraform-basic-config') {
+                    script {
+                        if (params.action == 'apply') {
+                            sh 'terraform apply -auto-approve'
+                        } else if (params.action == 'destroy') {
+                            sh 'terraform destroy -auto-approve'
+                        } else {
+                            error "Invalid action selected!"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
