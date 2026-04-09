@@ -1,0 +1,41 @@
+#basic code
+node {
+    stage('Build') {
+        echo 'Building...'
+    }
+    stage('Test') {
+        echo 'Testing...'
+    }
+    stage('Deploy') {
+        echo 'Deploying...'
+    }
+}
+
+
+#groovy support full programme condtions like below 
+node {
+    stage('Decide') {
+        if (env.BRANCH_NAME == 'main') {
+            stage('Deploy to Prod') {
+                echo 'Deploying to production'
+            }
+        } else if (env.BRANCH_NAME.startsWith('feature')) {
+            stage('Deploy to Dev') {
+                echo 'Deploying to dev'
+            }
+        }
+    }
+}
+
+
+#for loop condition
+
+def services = ["auth", "payment", "orders"]
+
+node {
+    for (svc in services) {
+        stage("Build ${svc}") {
+            echo "Building ${svc}"
+        }
+    }
+}
