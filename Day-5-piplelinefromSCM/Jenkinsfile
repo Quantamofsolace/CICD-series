@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('git checkout') {
             steps {
-               git branch: 'main', url: 'https://github.com/CloudTechDevOps/CICD-series.git'
+               git branch: 'main', url: 'https://github.com/Quantamofsolace/CICD-series.git'
             }
         }
          stage('init') {
