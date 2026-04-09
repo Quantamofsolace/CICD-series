@@ -2,20 +2,35 @@ pipeline {
     agent any
 
     stages {
-        stage('clone') {
+        stage('git checkout') {
             steps {
-              git branch: 'main', url: 'https://github.com/CloudTechDevOps/Terraform_CICD.git'
+               git branch: 'main', url: 'https://github.com/CloudTechDevOps/CICD-series.git'
             }
         }
-        stage('init') {
+         stage('init') {
             steps {
-                sh 'terraform init'
+                dir('Day-5-piplelinefromSCM') {
+                  sh  'terraform init'
+              
+                }
             }
         }
-         stage('plan') {
+        stage('plan') {
             steps {
-                sh 'terraform plan'
+               dir('Day-5-piplelinefromSCM') {
+                  sh  'terraform plan'
+              
+                }
             }
         }
+        stage('apply') {
+            steps {
+                dir('Day-5-piplelinefromSCM') {
+                  sh  'terraform apply -auto-approve'
+              
+                }
+            }
+        }
+      
     }
 }
